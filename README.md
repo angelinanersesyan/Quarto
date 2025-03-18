@@ -16,4 +16,4 @@ Java Code Outline for Quarto Game
         List of all 16 unique pieces
         The 4x4 board
         The current player# group_project
-   Hello
+
