@@ -31,7 +31,7 @@ public Height getHeight(){
     return height;
 }
 //Overriding toString method for clear representation of each piece
-public String ToString(){
+public String toString(){
 return "[" + height + ", " + color + ", " + shape + ", " + fill + "]";
 }
 
@@ -55,7 +55,7 @@ public static boolean sharingCommonAttr(Piece[] pieces){
                          pieces[1].fill == pieces[2].fill &&
                          pieces[2].fill == pieces[3].fill;
 }
-    return sameHeight || smaeColor || smaeShape || sameFill;
+    return sameHeight || sameColor || sameShape || sameFill;
 
 
 }
