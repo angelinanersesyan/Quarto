@@ -1,0 +1,37 @@
+import java.util.Scanner;
+
+public class Game {
+    private Piece[][] board = new Piece[4][4];
+    private Piece[] remainingPieces = new Piece[16];
+    private int remainingCount = 16;
+
+    public Game() {
+        // Create all 16 unique pieces
+        int index = 0;
+        for (Color color : Color.values()) {
+            for (Shape shape : Shape.values()) {
+                for (Fill fill : Fill.values()) {
+                    for (Height height : Height.values()) {
+                        remainingPieces[index++] = new Piece(color, shape, fill, height);
+                    }
+                }
+            }
+        }
+    }
+
+    public void start() {
+        Scanner scanner = new Scanner(System.in);
+        Piece selectedPiece = null;
+        int currentPlayer = 1;
+
+        while (true) {
+            System.out.println("\nCurrent Board:");
+            printBoard();
+
+            // Print remaining pieces
+            System.out.println("\nAvailable Pieces:");
+            for (int i = 0; i < remainingPieces.length; i++) {
+                if (remainingPieces[i] != null) {
+                    System.out.println(i + ": " + remainingPieces[i].toString());
+                }
+            }
