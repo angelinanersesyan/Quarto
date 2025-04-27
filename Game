@@ -35,3 +35,52 @@ public class Game {
                     System.out.println(i + ": " + remainingPieces[i].toString());
                 }
             }
+// Step 1: Player selects a piece for opponent to place
+            System.out.println("Player " + currentPlayer + ", choose a piece for your opponent to place (0-15):");
+            int chosenIndex;
+            while (true) {
+                chosenIndex = scanner.nextInt();
+                if (chosenIndex >= 0 && chosenIndex < 16 && remainingPieces[chosenIndex] != null) {
+                    selectedPiece = remainingPieces[chosenIndex];
+                    remainingPieces[chosenIndex] = null;
+                    remainingCount--;
+                    break;
+                } else {
+                    System.out.println("Invalid choice. Try again.");
+                }
+            }
+
+            // Step 2: Opponent places the selected piece
+            int placingPlayer = currentPlayer == 1 ? 2 : 1;
+            System.out.println("Player " + placingPlayer + ", place the piece at row and column (0-3):");
+            int row, col;
+            while (true) {
+                row = scanner.nextInt();
+                col = scanner.nextInt();
+                if (isValidMove(row, col)) {
+                    board[row][col] = selectedPiece;
+                    break;
+                } else {
+                    System.out.println("Invalid position. Try again.");
+                }
+            }
+
+            // Step 3: Check win
+            if (checkWin(row, col)) {
+                System.out.println("\nPlayer " + placingPlayer + " placed the winning piece!");
+                printBoard();
+                break;
+            }
+
+            // Step 4: Check draw
+            if (remainingCount == 0) {
+                System.out.println("The game is a draw!");
+                break;
+            }
+
+            // Step 5: Switch turns
+            currentPlayer = placingPlayer;
+        }
+
+        scanner.close();
+    }
