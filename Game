@@ -84,3 +84,26 @@ public class Game {
 
         scanner.close();
     }
+ private boolean isValidMove(int row, int col) {
+        return row >= 0 && row < 4 && col >= 0 && col < 4 && board[row][col] == null;
+    }
+
+    private boolean checkWin(int row, int col) {
+        return checkLine(getRow(row)) ||
+                checkLine(getCol(col)) ||
+                (row == col && checkLine(getMainDiagonal())) ||
+                (row + col == 3 && checkLine(getAntiDiagonal()));
+    }
+
+    private Piece[] getRow(int row) {
+        return board[row];
+    }
+
+    private Piece[] getCol(int col) {
+        Piece[] column = new Piece[4];
+        for (int i = 0; i < 4; i++) {
+            column[i] = board[i][col];
+        }
+        return column;
+    }
+
