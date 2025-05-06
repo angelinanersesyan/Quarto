@@ -107,7 +107,17 @@ public class Game {
         return column;
     }
 
- for (int i = 0; i < 4; i++) {
+  private Piece[] getMainDiagonal() {
+        Piece[] diagonal = new Piece[4];
+        for (int i = 0; i < 4; i++) {
+            diagonal[i] = board[i][i];
+        }
+        return diagonal;
+    }
+
+    private Piece[] getAntiDiagonal() {
+        Piece[] diagonal = new Piece[4];
+        for (int i = 0; i < 4; i++) {
             diagonal[i] = board[i][3 - i];
         }
         return diagonal;
@@ -130,5 +140,3 @@ public class Game {
         }
     }
 }
-
-
