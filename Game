@@ -107,3 +107,28 @@ public class Game {
         return column;
     }
 
+ for (int i = 0; i < 4; i++) {
+            diagonal[i] = board[i][3 - i];
+        }
+        return diagonal;
+    }
+
+    private boolean checkLine(Piece[] line) {
+        for (Piece p : line) {
+            if (p == null) return false;
+        }
+        return Piece.sharingCommonAttr(line);
+    }
+
+    private void printBoard() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.print(board[i][j] == null ? "[     ]" : board[i][j].toString());
+                System.out.print("\t");
+            }
+            System.out.println();
+        }
+    }
+}
+
+
