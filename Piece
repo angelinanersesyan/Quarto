@@ -21,7 +21,7 @@ public Piece(Color color, Shape shape, Fill fill, Height height){
 public Color getColor(){
     return color;
 }
-public Shape getshape(){
+public Shape getShape(){
     return shape;
 }
 public Fill getFill(){
