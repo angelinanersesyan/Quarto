@@ -1,5 +1,8 @@
-import java.util.Scanner;
+package D;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Scanner;
 public class Game {
     private Piece[][] board = new Piece[4][4];
     private Piece[] remainingPieces = new Piece[16];
@@ -35,7 +38,7 @@ public class Game {
                     System.out.println(i + ": " + remainingPieces[i].toString());
                 }
             }
-// Step 1: Player selects a piece for opponent to place
+            // Step 1: Player selects a piece for opponent to place
             System.out.println("Player " + currentPlayer + ", choose a piece for your opponent to place (0-15):");
             int chosenIndex;
             while (true) {
