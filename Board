@@ -17,7 +17,7 @@ class Board {
                checkLine(grid[0][3], grid[1][2], grid[2][1], grid[3][0]);
     }
 
-    private boolean checkLine(Piece... pieces) {
+    private boolean checkLine(Piece[] pieces) {
         if (Arrays.stream(pieces).anyMatch(Objects::isNull)) return false;
         for (int i = 0; i < 4; i++) {
             final int index = i;
