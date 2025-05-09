@@ -1,30 +1,43 @@
-public class Board {
-    Piece[][] grid = new Piece[4][4];
+class Board {
+    private final Piece[][] grid = new Piece[4][4];
 
     public boolean placePiece(int row, int col, Piece piece) {
-        if (grid[row][col] != null) return false;
+        if (row < 0 || row >= 4 || col < 0 || col >= 4 || grid[row][col] != null)
+            return false;
         grid[row][col] = piece;
         return true;
     }
 
-    public boolean isFull() {
-        for (int r = 0; r < 4; r++)
-            for (int c = 0; c < 4; c++)
-                if (grid[r][c] == null)
-                    return false;
-        return true;
+    public boolean checkWin() {
+        for (int i = 0; i < 4; i++) {
+            if (checkLine(grid[i][0], grid[i][1], grid[i][2], grid[i][3])) return true;
+            if (checkLine(grid[0][i], grid[1][i], grid[2][i], grid[3][i])) return true;
+        }
+        return checkLine(grid[0][0], grid[1][1], grid[2][2], grid[3][3]) ||
+               checkLine(grid[0][3], grid[1][2], grid[2][1], grid[3][0]);
     }
 
-    // Check if there is a Quarto (winning condition)
-    public boolean hasQuarto() {
+    private boolean checkLine(Piece... pieces) {
+        if (Arrays.stream(pieces).anyMatch(Objects::isNull)) return false;
         for (int i = 0; i < 4; i++) {
-            if (checkLine(grid[i][0], grid[i][1], grid[i][2], grid[i][3])) return true; // Row
-            if (checkLine(grid[0][i], grid[1][i], grid[2][i], grid[3][i])) return true; // Column
+            final int index = i;
+            boolean same = Arrays.stream(pieces)
+                                 .map(Piece::getAttributes)
+                                 .map(attrs -> attrs[index])
+                                 .distinct()
+                                 .count() == 1;
+            if (same) return true;
         }
-
-        // Diagonals
-        if (checkLine(grid[0][0], grid[1][1], grid[2][2], grid[3][3])) return true;
-        if (checkLine(grid[0][3], grid[1][2], grid[2][1], grid[3][0])) return true;
-
         return false;
     }
+
+    public void printBoard() {
+        for (Piece[] row : grid) {
+            for (Piece p : row) {
+                System.out.print((p == null ? "[   ]" : "[X]") + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
