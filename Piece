@@ -1,7 +1,7 @@
-public enum Color {LIGHT, DARK}
-public enum Shape {ROUND, SQUARE}
-public enum Fill {SOLID, HOLLOW}
-public enum Height {TALL, SHORT} 
+ enum Color {LIGHT, DARK}
+ enum Shape {ROUND, SQUARE}
+ enum Fill {SOLID, HOLLOW}
+ enum Height {TALL, SHORT} 
 
 public class Piece{
     private Color color;
