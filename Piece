@@ -1,4 +1,8 @@
- enum Color {LIGHT, DARK}
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Scanner;
+ 
+enum Color {LIGHT, DARK}
  enum Shape {ROUND, SQUARE}
  enum Fill {SOLID, HOLLOW}
  enum Height {TALL, SHORT} 
@@ -36,26 +40,26 @@ return "[" + height + ", " + color + ", " + shape + ", " + fill + "]";
 }
 
 //Checking method for common/winnging attributes
-public static boolean sharingCommonAttr(Piece[] pieces){
-    if (pieces.length != 4)
-        return false;
-    boolean sameHeight = pieces[0].height == pieces[1].height &&
-                         pieces[1].height == pieces[2].height &&
-                         pieces[2].height == pieces[3].height;
+	public static boolean sharingCommonAttr(Piece[] pieces){
+	    if (pieces.length != 4)
+	        return false;
 
-    boolean sameColor = pieces[0].color == pieces[1].color &&
-                         pieces[1].color == pieces[2].color &&
-                         pieces[2].color == pieces[3].color;
+	    boolean sameHeight = pieces[0].height == pieces[1].height &&
+	                         pieces[1].height == pieces[2].height &&
+	                         pieces[2].height == pieces[3].height;
 
-    boolean sameShape = pieces[0].shape == pieces[1].shape &&
-                         pieces[1].shape == pieces[2].shape &&
-                         pieces[2].shape == pieces[3].shape;
+	    boolean sameColor = pieces[0].color == pieces[1].color &&
+	                         pieces[1].color == pieces[2].color &&
+	                         pieces[2].color == pieces[3].color;
 
-    boolean sameFill = pieces[0].fill == pieces[1].fill &&
-                         pieces[1].fill == pieces[2].fill &&
-                         pieces[2].fill == pieces[3].fill;
-}
-    return sameHeight || sameColor || sameShape || sameFill;
+	    boolean sameShape = pieces[0].shape == pieces[1].shape &&
+	                         pieces[1].shape == pieces[2].shape &&
+	                         pieces[2].shape == pieces[3].shape;
 
+	    boolean sameFill = pieces[0].fill == pieces[1].fill &&
+	                         pieces[1].fill == pieces[2].fill &&
+	                         pieces[2].fill == pieces[3].fill;
 
+	    return sameHeight || sameColor || sameShape || sameFill; 
+	}
 }
