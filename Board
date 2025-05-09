@@ -1,6 +1,4 @@
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Board {
     private final Piece[][] grid = new Piece[4][4];
