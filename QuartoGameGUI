@@ -1,0 +1,224 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+public class QuartoGameGUI {
+    private JFrame frame;
+    private JButton[][] boardButtons;
+    private JButton[] pieceButtons;
+    private JPanel boardPanel, piecePanel;
+    private String[] allPieces;
+    private String selectedPiece = null;
+    private boolean isPlayer1Turn = true;
+    private boolean gameOver = false;
+
+    public QuartoGameGUI() {
+        frame = new JFrame("Quarto Game");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        boardPanel = new JPanel(new GridLayout(4, 4)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                GradientPaint warmGradient = new GradientPaint(0, 0, new Color(139, 69, 19),
+                        getWidth(), getHeight(), new Color(210, 105, 30));
+                g2d.setPaint(warmGradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+
+        boardButtons = new JButton[4][4];
+        piecePanel = new JPanel(new GridLayout(4, 4));
+
+        initializeBoard();
+        initializePieces();
+
+        frame.add(boardPanel, BorderLayout.CENTER);
+        frame.add(piecePanel, BorderLayout.SOUTH);
+        frame.setVisible(true);
+    }
+
+    private void initializeBoard() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                JButton btn = new JButton();
+                btn.setBackground(new Color(205, 133, 63));
+                final int row = i, col = j;
+                btn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        placePiece(row, col);
+                    }
+                });
+                boardButtons[i][j] = btn;
+                boardPanel.add(btn);
+            }
+        }
+    }
+
+    private void initializePieces() {
+        allPieces = generateAllPieceCodes();
+        pieceButtons = new JButton[16];
+
+        for (int i = 0; i < 16; i++) {
+            JButton pieceBtn = new JButton();
+            pieceBtn.setIcon(generatePieceIcon(allPieces[i]));
+            pieceBtn.setText(allPieces[i]);
+            pieceBtn.setToolTipText(allPieces[i]);
+
+            final int index = i;
+            pieceBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    selectPiece(index);
+                }
+            });
+            pieceButtons[i] = pieceBtn;
+            piecePanel.add(pieceBtn);
+        }
+    }
+
+    private String[] generateAllPieceCodes() {
+        String[] heights = {"T", "S"};
+        String[] colors = {"D", "L"};
+        String[] shapes = {"S", "R"};
+        String[] fills = {"S", "H"};
+        String[] pieces = new String[16];
+        int index = 0;
+        for (String h : heights)
+            for (String c : colors)
+                for (String s : shapes)
+                    for (String f : fills)
+                        pieces[index++] = h + c + s + f;
+        return pieces;
+    }
+
+    private void selectPiece(int index) {
+        if (selectedPiece == null && pieceButtons[index].isEnabled() && !gameOver) {
+            selectedPiece = allPieces[index];
+            pieceButtons[index].setEnabled(false);
+            JOptionPane.showMessageDialog(frame, "Player " + (isPlayer1Turn ? "1" : "2") + " selected a piece for Player " + (isPlayer1Turn ? "2" : "1") + ": " + selectedPiece);
+        }
+    }
+
+    private void placePiece(int i, int j) {
+        if (selectedPiece == null || gameOver) {
+            JOptionPane.showMessageDialog(frame, "No piece selected or game over.");
+            return;
+        }
+        JButton btn = boardButtons[i][j];
+        if (btn.getText().isEmpty()) {
+            btn.setIcon(generatePieceIcon(selectedPiece));
+            btn.setText(selectedPiece);
+            if (checkWin(i, j)) {
+                showWinningMessage();
+                gameOver = true;
+            } else {
+                selectedPiece = null;
+                isPlayer1Turn = !isPlayer1Turn;
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "This spot is already taken.");
+        }
+    }
+
+    private boolean checkWin(int row, int col) {
+        return checkLine(row, 0, 0, 1) || checkLine(0, col, 1, 0) ||
+                (row == col && checkLine(0, 0, 1, 1)) ||
+                (row + col == 3 && checkLine(0, 3, 1, -1));
+    }
+
+    private boolean checkLine(int startX, int startY, int dx, int dy) {
+        if (boardButtons[startX][startY].getText().isEmpty()) return false;
+
+        char[] attributes = {'T', 'S', 'D', 'L', 'S', 'R', 'S', 'H'};
+        for (char attribute : attributes) {
+            boolean match = true;
+            for (int i = 0; i < 4; i++) {
+                int x = startX + i * dx;
+                int y = startY + i * dy;
+                String piece = boardButtons[x][y].getText();
+
+                if (piece.isEmpty() || !piece.contains(String.valueOf(attribute))) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) return true;
+        }
+        return false;
+    }
+
+    private void showWinningMessage() {
+        int choice = JOptionPane.showConfirmDialog(frame, "Quarto! Player " + (isPlayer1Turn ? "1" : "2") + " wins! Do you want to play again?",
+                "Game Over", JOptionPane.YES_NO_OPTION);
+
+        if (choice == JOptionPane.YES_OPTION) {
+            resetGame();
+        } else {
+            frame.dispose();
+        }
+    }
+
+    private void resetGame() {
+        gameOver = false;
+        selectedPiece = null;
+        isPlayer1Turn = true;
+
+    
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                boardButtons[i][j].setIcon(null);
+                boardButtons[i][j].setText("");
+            }
+        }
+        for (int i = 0; i < 16; i++) {
+            pieceButtons[i].setEnabled(true);
+        }
+    }
+    private Icon generatePieceIcon(String code) {
+        int width = 50, height = 50;
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = img.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        boolean isTall = code.charAt(0) == 'T';
+        boolean isDark = code.charAt(1) == 'D';
+        boolean isSquare = code.charAt(2) == 'S';
+        boolean isSolid = code.charAt(3) == 'S';
+
+        Color fillColor = isDark ? new Color(60, 30, 10) : new Color(222, 184, 135);
+        int shapeHeight = isTall ? 40 : 25;
+        int shapeWidth = 30;
+        int x = (width - shapeWidth) / 2;
+        int y = (height - shapeHeight) / 2;
+
+        g.setPaint(isSolid ? fillColor : Color.WHITE);
+        if (isSquare) {
+            g.fillRect(x, y, shapeWidth, shapeHeight);
+        } else {
+            g.fillOval(x, y, shapeWidth, shapeHeight);
+        }
+        g.setColor(Color.BLACK);
+        g.drawRect(x, y, shapeWidth, shapeHeight);
+
+        g.dispose();
+        return new ImageIcon(img);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new QuartoGameGUI();
+            }
+        });
+    }
+}
+
+
+
